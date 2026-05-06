@@ -1,0 +1,249 @@
+@import "tailwindcss";
+
+/* ========== DESIGN TOKENS ========== */
+:root {
+  --color-base: #FFFFFF;
+  --color-soft: #F7F9FC;
+  --color-blue: #60A5FA;
+  --color-cyan: #6EE7F9;
+  --color-purple: #A78BFA;
+  --color-text-primary: #0F172A;
+  --color-text-secondary: #64748B;
+  
+  --glass-bg: rgba(255, 255, 255, 0.55);
+  --glass-border: rgba(255, 255, 255, 0.35);
+  --glass-blur: 24px;
+  --glass-shadow: 0 8px 32px rgba(96, 165, 250, 0.08), 0 0 0 1px rgba(255,255,255,0.2);
+  --glass-glow: inset 0 1px 0 rgba(255,255,255,0.6), 0 0 40px rgba(96,165,250,0.06);
+
+  --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: 'Space Grotesk', sans-serif;
+  
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ========== RESET & BASE ========== */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: auto; /* Lenis handles smooth scroll */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-primary);
+  color: var(--color-text-primary);
+  background: var(--color-base);
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* Hide default cursor everywhere */
+*, *::before, *::after {
+  cursor: none !important;
+}
+
+/* ========== SCROLLBAR ========== */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--color-blue), var(--color-purple));
+  border-radius: 3px;
+}
+
+/* ========== GLASS COMPONENT ========== */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow), var(--glass-glow);
+  border-radius: 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+.glass::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.02'/%3E%3C/svg%3E");
+  background-size: 128px 128px;
+  pointer-events: none;
+  z-index: 1;
+  border-radius: inherit;
+}
+
+.glass-strong {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(32px);
+  -webkit-backdrop-filter: blur(32px);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  box-shadow: var(--glass-shadow), var(--glass-glow);
+  border-radius: 24px;
+}
+
+/* ========== GRADIENT TEXT ========== */
+.gradient-text {
+  background: linear-gradient(135deg, var(--color-blue), var(--color-purple), var(--color-cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ========== GLOW BUTTON ========== */
+.glow-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 32px;
+  border: none;
+  border-radius: 16px;
+  font-family: var(--font-primary);
+  font-weight: 600;
+  font-size: 15px;
+  color: white;
+  background: linear-gradient(135deg, var(--color-blue), var(--color-purple));
+  transition: all 0.4s var(--ease-out-expo);
+  overflow: hidden;
+  z-index: 1;
+}
+
+.glow-btn::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(135deg, var(--color-blue), var(--color-cyan), var(--color-purple));
+  border-radius: inherit;
+  z-index: -2;
+  opacity: 0;
+  transition: opacity 0.4s var(--ease-out-expo);
+  filter: blur(12px);
+}
+
+.glow-btn:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 12px 40px rgba(96, 165, 250, 0.35);
+}
+
+.glow-btn:hover::before {
+  opacity: 1;
+}
+
+.glow-btn-outline {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  color: var(--color-text-primary);
+  border: 1px solid var(--glass-border);
+}
+
+.glow-btn-outline:hover {
+  background: rgba(255, 255, 255, 0.8);
+  border-color: var(--color-blue);
+  box-shadow: 0 12px 40px rgba(96, 165, 250, 0.15);
+}
+
+/* ========== SECTION STYLES ========== */
+.section-wrapper {
+  position: relative;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.section-wrapper > * {
+  pointer-events: auto;
+}
+
+/* ========== LOADING SCREEN ========== */
+.loading-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, #FFFFFF 0%, #F7F9FC 50%, #EFF6FF 100%);
+}
+
+.loading-text {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 4rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, var(--color-blue), var(--color-purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.loading-bar-container {
+  width: clamp(200px, 30vw, 400px);
+  height: 4px;
+  background: rgba(96, 165, 250, 0.12);
+  border-radius: 4px;
+  margin-top: 32px;
+  overflow: hidden;
+}
+
+.loading-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-blue), var(--color-cyan), var(--color-purple));
+  border-radius: 4px;
+  transition: width 0.3s var(--ease-out-expo);
+  box-shadow: 0 0 20px rgba(96, 165, 250, 0.4);
+}
+
+/* ========== ANIMATIONS ========== */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-12px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(96,165,250,0.15); }
+  50% { box-shadow: 0 0 40px rgba(96,165,250,0.3); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+.float-animation {
+  animation: float 6s ease-in-out infinite;
+}
+
+.pulse-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+/* ========== TYPOGRAPHY ========== */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+/* ========== SELECTION ========== */
+::selection {
+  background: rgba(96, 165, 250, 0.2);
+  color: var(--color-text-primary);
+}
