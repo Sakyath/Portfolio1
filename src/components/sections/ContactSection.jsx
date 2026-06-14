@@ -1,9 +1,115 @@
 import React, { useRef, useState } from 'react'
-import { motion, useInView } from 'framer-motion'
+import { motion, useInView, AnimatePresence } from 'framer-motion'
 import emailjs from '@emailjs/browser'
 
 // Initialize EmailJS with environment variables
 emailjs.init(import.meta.env.VITE_EMAILJS_PUBLIC_KEY)
+
+// 3D Loading Animation Component
+const EmailLoadingOverlay = () => (
+  <motion.div
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    exit={{ opacity: 0 }}
+    style={{
+      position: 'fixed',
+      inset: 0,
+      background: 'rgba(15, 23, 42, 0.7)',
+      backdropFilter: 'blur(8px)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      zIndex: 9999,
+    }}
+  >
+    <div style={{ perspective: '1000px' }}>
+      {/* 3D Rotating Cube */}
+      <motion.div
+        style={{
+          width: '80px',
+          height: '80px',
+          position: 'relative',
+          transformStyle: 'preserve-3d',
+        }}
+        animate={{
+          rotateX: 360,
+          rotateY: 360,
+        }}
+        transition={{
+          duration: 4,
+          repeat: Infinity,
+          ease: 'linear',
+        }}
+      >
+        {[
+          { bg: 'rgba(96, 165, 250, 0.8)', transform: 'translateZ(40px)' },
+          { bg: 'rgba(110, 231, 249, 0.8)', transform: 'rotateY(180deg) translateZ(40px)' },
+          { bg: 'rgba(167, 139, 250, 0.8)', transform: 'rotateY(90deg) translateZ(40px)' },
+          { bg: 'rgba(96, 165, 250, 0.6)', transform: 'rotateY(-90deg) translateZ(40px)' },
+          { bg: 'rgba(110, 231, 249, 0.6)', transform: 'rotateX(90deg) translateZ(40px)' },
+          { bg: 'rgba(167, 139, 250, 0.6)', transform: 'rotateX(-90deg) translateZ(40px)' },
+        ].map((face, i) => (
+          <div
+            key={i}
+            style={{
+              position: 'absolute',
+              width: '80px',
+              height: '80px',
+              background: face.bg,
+              border: '2px solid rgba(255, 255, 255, 0.2)',
+              transform: face.transform,
+              transformStyle: 'preserve-3d',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          />
+        ))}
+      </motion.div>
+
+      {/* Loading Text */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3 }}
+        style={{
+          textAlign: 'center',
+          marginTop: '40px',
+        }}
+      >
+        <p style={{
+          color: '#fff',
+          fontSize: '16px',
+          fontWeight: 600,
+          marginBottom: '12px',
+        }}>
+          Sending your message...
+        </p>
+        
+        {/* Animated dots */}
+        <div style={{ display: 'flex', gap: '6px', justifyContent: 'center' }}>
+          {[0, 1, 2].map((i) => (
+            <motion.div
+              key={i}
+              style={{
+                width: '8px',
+                height: '8px',
+                borderRadius: '50%',
+                background: 'linear-gradient(135deg, #60A5FA, #A78BFA)',
+              }}
+              animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }}
+              transition={{
+                duration: 1.2,
+                repeat: Infinity,
+                delay: i * 0.2,
+              }}
+            />
+          ))}
+        </div>
+      </motion.div>
+    </div>
+  </motion.div>
+)
 
 const contactLinks = [
   {
@@ -62,21 +168,32 @@ export default function ContactSection() {
 
     try {
       const templateParams = {
-        to_email: import.meta.env.VITE_CONTACT_EMAIL,
-        from_name: formState.name,
-        from_email: formState.email,
-        message: formState.message,
+        from_name: formState.name,      // use {{from_name}} in EmailJS template
+        from_email: formState.email,    // use {{from_email}} in EmailJS template
+        message: formState.message,     // use {{message}} in EmailJS template
+        reply_to: formState.email,      // lets you hit Reply directly to the sender
       }
 
+      // Send main email to Sakyath
       await emailjs.send(
         import.meta.env.VITE_EMAILJS_SERVICE_ID,
-        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+        'template_qu51wgd',
         templateParams
       )
 
-      setSubmitMessage('✓ Message sent successfully! I\'ll get back to you soon.')
+      // Send auto-reply to sender
+      const autoReplyParams = {
+        from_name: formState.name,
+        from_email: formState.email,
+      }
+      await emailjs.send(
+        import.meta.env.VITE_EMAILJS_SERVICE_ID,
+        'template_1uousdd',
+        autoReplyParams
+      )
+
+      setSubmitMessage("✓ Message sent successfully! I'll get back to you soon.")
       setFormState({ name: '', email: '', message: '' })
-      
       setTimeout(() => setSubmitMessage(''), 4000)
     } catch (error) {
       console.error('EmailJS error:', error)
@@ -90,33 +207,38 @@ export default function ContactSection() {
   const inputStyle = (field) => ({
     width: '100%',
     padding: '14px 18px',
-    borderRadius: '16px',
-    border: `1.5px solid ${focusedField === field ? '#60A5FA50' : 'rgba(255,255,255,0.35)'}`,
-    background: focusedField === field ? 'rgba(255,255,255,0.75)' : 'rgba(255,255,255,0.5)',
-    backdropFilter: 'blur(12px)',
-    WebkitBackdropFilter: 'blur(12px)',
+    borderRadius: '20px',
+    border: `1.5px solid ${focusedField === field ? 'rgba(96,165,250,0.50)' : 'rgba(255,255,255,0.45)'}`,
+    background: focusedField === field ? 'rgba(255,255,255,0.80)' : 'rgba(255,255,255,0.62)',
+    backdropFilter: 'blur(40px)',
+    WebkitBackdropFilter: 'blur(40px)',
     outline: 'none',
     fontSize: '14px',
     fontFamily: "'Inter', sans-serif",
     color: '#0F172A',
     transition: 'all 0.3s cubic-bezier(0.16,1,0.3,1)',
     boxShadow: focusedField === field
-      ? '0 0 0 3px rgba(96,165,250,0.08), 0 4px 16px rgba(96,165,250,0.06)'
-      : 'none',
+      ? '0 8px 32px rgba(96,165,250,0.12), inset 0 0 0 0.5px rgba(255,255,255,0.5)'
+      : '0 4px 16px rgba(96,165,250,0.04), inset 0 0 0 0.5px rgba(255,255,255,0.3)',
   })
 
   return (
-    <section
-      id="contact"
-      ref={ref}
-      style={{
-        minHeight: '100vh',
-        padding: '120px 5vw 80px',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-      }}
-    >
+    <>
+      <AnimatePresence>
+        {isSubmitting && <EmailLoadingOverlay />}
+      </AnimatePresence>
+
+      <section
+        id="contact"
+        ref={ref}
+        style={{
+          minHeight: '100vh',
+          padding: '120px 5vw 80px',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}
+      >
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: 30 }}
@@ -432,6 +554,7 @@ export default function ContactSection() {
           </motion.div>
         </motion.div>
       </div>
-    </section>
+      </section>
+    </>
   )
 }
