@@ -7,6 +7,7 @@ const navItems = [
   { label: 'About', href: '#about' },
   { label: 'Skills', href: '#skills' },
   { label: 'Experience', href: '#experience' },
+  { label: 'Certifications', href: '#certifications' },
   { label: 'Projects', href: '#projects' },
   { label: 'Contact', href: '#contact' },
 ]
@@ -20,22 +21,33 @@ export default function Navbar() {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50)
 
-      // Find active section
+      // Find active section with improved detection
       const sections = navItems.map(item => ({
         id: item.href.slice(1),
         label: item.label,
       }))
 
-      for (let i = sections.length - 1; i >= 0; i--) {
+      let currentActive = 'Home'
+      
+      for (let i = 0; i < sections.length; i++) {
         const el = document.getElementById(sections[i].id)
-        if (el && el.getBoundingClientRect().top <= 200) {
-          setActive(sections[i].label)
-          break
+        if (el) {
+          const rect = el.getBoundingClientRect()
+          // Check if section is in the upper half of viewport
+          if (rect.top <= window.innerHeight / 2) {
+            currentActive = sections[i].label
+          } else {
+            break
+          }
         }
       }
+      
+      setActive(currentActive)
     }
 
     window.addEventListener('scroll', handleScroll)
+    // Call once on mount to set initial state
+    handleScroll()
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
@@ -60,22 +72,23 @@ export default function Navbar() {
           left: '50%',
           transform: 'translateX(-50%)',
           zIndex: 100,
-          padding: '12px 24px',
-          borderRadius: '28px',
-          background: scrolled ? 'rgba(255,255,255,0.68)' : 'rgba(255,255,255,0.50)',
-          backdropFilter: 'blur(40px)',
-          WebkitBackdropFilter: 'blur(40px)',
-          border: `1.5px solid ${scrolled ? 'rgba(255,255,255,0.55)' : 'rgba(255,255,255,0.40)'}`,
+          padding: '12px 28px',
+          borderRadius: '30px',
+          background: scrolled ? 'rgba(255,255,255,0.70)' : 'rgba(255,255,255,0.55)',
+          backdropFilter: 'blur(48px)',
+          WebkitBackdropFilter: 'blur(48px)',
+          border: `1.5px solid ${scrolled ? 'rgba(255,255,255,0.50)' : 'rgba(255,255,255,0.42)'}`,
           boxShadow: scrolled
-            ? '0 12px 48px rgba(96,165,250,0.12), inset 0 0 0 0.5px rgba(255,255,255,0.5)'
-            : '0 8px 32px rgba(96,165,250,0.06), inset 0 0 0 0.5px rgba(255,255,255,0.3)',
+            ? '0 28px 90px rgba(96,165,250,0.15), inset 0 1px 0 rgba(255,255,255,0.75)'
+            : '0 16px 64px rgba(96,165,250,0.10), inset 0 1px 0 rgba(255,255,255,0.65)',
           display: 'flex',
           alignItems: 'center',
-          gap: '6px',
+          gap: '8px',
           transition: 'all 0.4s cubic-bezier(0.16,1,0.3,1)',
+          backdropFilter: scrolled ? 'blur(48px)' : 'blur(42px)',
         }}
       >
-        {/* Logo Image - Replace /images/logo.png with your own */}
+        {/* Logo Image */}
    <img
   src={portImage}
   alt="Sakyath Bonagiri"
@@ -84,15 +97,16 @@ export default function Navbar() {
     height: window.innerWidth <= 768 ? '42px' : '50px',
     borderRadius: '50%',
     objectFit: 'cover',
-    marginRight: window.innerWidth <= 768 ? '8px' : '12px',
-    border: '2px solid rgba(96,165,250,0.25)',
-    boxShadow: '0 4px 12px rgba(96,165,250,0.15)',
+    marginRight: window.innerWidth <= 768 ? '8px' : '16px',
+    border: '2px solid rgba(96, 165, 250, 0.35)',
+    boxShadow: '0 8px 24px rgba(96, 165, 250, 0.2), inset 0 1px 0 rgba(255,255,255,0.8)',
     flexShrink: 0,
     display: 'block',
+    transition: 'all 0.3s ease',
   }}
 />
         {/* Desktop Nav */}
-        <div style={{ display: 'flex', gap: '2px' }} className="nav-desktop">
+        <div style={{ display: 'flex', gap: '4px' }} className="nav-desktop">
           {navItems.map((item) => (
             <a
               key={item.label}
@@ -104,11 +118,12 @@ export default function Navbar() {
                 padding: '8px 16px',
                 borderRadius: '12px',
                 fontSize: '13px',
-                fontWeight: 500,
+                fontWeight: '600',
                 color: active === item.label ? '#0F172A' : '#64748B',
                 textDecoration: 'none',
                 transition: 'all 0.3s ease',
-                background: active === item.label ? 'rgba(96,165,250,0.08)' : 'transparent',
+                background: active === item.label ? 'rgba(96,165,250,0.12)' : 'transparent',
+                backdropFilter: active === item.label ? 'blur(12px)' : 'none',
               }}
             >
               {item.label}
@@ -117,13 +132,14 @@ export default function Navbar() {
                   layoutId="nav-indicator"
                   style={{
                     position: 'absolute',
-                    bottom: '2px',
+                    bottom: '3px',
                     left: '50%',
                     transform: 'translateX(-50%)',
-                    width: '16px',
-                    height: '3px',
-                    borderRadius: '2px',
-                    background: 'linear-gradient(90deg, #60A5FA, #A78BFA)',
+                    width: '18px',
+                    height: '2.5px',
+                    borderRadius: '1.5px',
+                    background: 'linear-gradient(90deg, #60A5FA 0%, #A78BFA 100%)',
+                    boxShadow: '0 0 12px rgba(96, 165, 250, 0.4)',
                   }}
                   transition={{ type: 'spring', stiffness: 350, damping: 30 }}
                 />
@@ -165,16 +181,16 @@ export default function Navbar() {
               left: '16px',
               right: '16px',
               zIndex: 99,
-              padding: '16px',
-              borderRadius: '28px',
-              background: 'rgba(255,255,255,0.68)',
-              backdropFilter: 'blur(40px)',
-              WebkitBackdropFilter: 'blur(40px)',
+              padding: '18px',
+              borderRadius: '30px',
+              background: 'rgba(255,255,255,0.70)',
+              backdropFilter: 'blur(48px)',
+              WebkitBackdropFilter: 'blur(48px)',
               border: '1.5px solid rgba(255,255,255,0.50)',
-              boxShadow: '0 12px 48px rgba(96,165,250,0.12), inset 0 0 0 0.5px rgba(255,255,255,0.4)',
+              boxShadow: '0 28px 90px rgba(96,165,250,0.15), inset 0 1px 0 rgba(255,255,255,0.75)',
               display: 'flex',
               flexDirection: 'column',
-              gap: '4px',
+              gap: '6px',
             }}
           >
             {navItems.map((item) => (

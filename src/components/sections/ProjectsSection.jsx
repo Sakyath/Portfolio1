@@ -16,6 +16,22 @@ const projects = [
     image: '/images/project2.png',
     technologies: ['.NET MVC 5', 'SQL Server', 'Bootstrap', 'JavaScript'],
     color: '#A78BFA',
+    category: 'Frontend',
+  },
+  {
+    title: 'E-Commerce Platform',
+    description: 'Full-featured e-commerce platform with product catalog, shopping cart, secure payment integration, order management, and admin dashboard. Includes real-time inventory tracking and customer analytics.',
+    image: '/images/project3.png',
+    technologies: ['React.js', 'Node.js', 'Express', 'MongoDB', 'Stripe API'],
+    color: '#34D399',
+    category: 'Full Stack',
+  },
+  {
+    title: 'Task Management Application',
+    description: 'Collaborative task management tool with real-time updates, team assignments, progress tracking, and notifications. Features include project organization, deadline reminders, and activity logs.',
+    image: '/images/project4.png',
+    technologies: ['React', 'Java', 'Spring Boot', 'PostgreSQL', 'WebSocket'],
+    color: '#FBBF24',
     category: 'Full Stack',
   },
 ]
@@ -81,7 +97,7 @@ function ProjectCard({ project, index, isInView, onSelect }) {
             transition: 'all 0.4s ease',
             transform: isHovered ? 'scale(1.1) rotate(5deg)' : 'scale(1)',
           }}>
-            {index === 0 ? '🏠' : '🎓'}
+            {index === 0 ? '🏠' : index === 1 ? '🎓' : index === 2 ? '🛒' : index === 3 ? '✅' : index === 4 ? '👥' : index === 5 ? '💪' : index === 6 ? '🏘️' : '📚'}
           </div>
           <span style={{
             fontSize: '12px',
@@ -220,7 +236,8 @@ function ProjectModal({ project, onClose }) {
         justifyContent: 'center',
         background: 'rgba(15,23,42,0.3)',
         backdropFilter: 'blur(12px)',
-        padding: '20px',
+        padding: 'clamp(12px, 3vw, 20px)',
+        overflowY: 'auto',
       }}
     >
       <motion.div
@@ -230,16 +247,16 @@ function ProjectModal({ project, onClose }) {
         transition={{ type: 'spring', stiffness: 300, damping: 30 }}
         onClick={(e) => e.stopPropagation()}
         style={{
-          maxWidth: '640px',
+          maxWidth: 'clamp(320px, 90vw, 640px)',
           width: '100%',
-          maxHeight: '85vh',
+          maxHeight: '90vh',
           overflow: 'auto',
-          borderRadius: '32px',
+          borderRadius: '28px',
           background: 'rgba(255,255,255,0.85)',
           backdropFilter: 'blur(40px)',
           border: '1px solid rgba(255,255,255,0.5)',
           boxShadow: `0 32px 100px ${project.color}20, 0 0 0 1px rgba(255,255,255,0.3)`,
-          padding: 'clamp(24px, 4vw, 40px)',
+          padding: 'clamp(20px, 5vw, 36px)',
           position: 'relative',
         }}
       >
@@ -249,8 +266,8 @@ function ProjectModal({ project, onClose }) {
           data-hoverable
           style={{
             position: 'absolute',
-            top: '16px',
-            right: '16px',
+            top: 'clamp(12px, 3vw, 16px)',
+            right: 'clamp(12px, 3vw, 16px)',
             width: '36px',
             height: '36px',
             borderRadius: '12px',
@@ -261,7 +278,9 @@ function ProjectModal({ project, onClose }) {
             justifyContent: 'center',
             fontSize: '18px',
             color: '#64748B',
-            zIndex: 2,
+            zIndex: 10,
+            cursor: 'pointer',
+            transition: 'all 0.3s ease',
           }}
         >
           ✕
@@ -269,10 +288,11 @@ function ProjectModal({ project, onClose }) {
 
         {/* Project image area */}
         <div style={{
-          height: '200px',
+          height: 'clamp(140px, 25vw, 180px)',
           borderRadius: '20px',
           background: `linear-gradient(135deg, ${project.color}10, ${project.color}20)`,
-          marginBottom: '28px',
+          marginBottom: 'clamp(20px, 4vw, 28px)',
+          marginTop: 'clamp(8px, 2vw, 16px)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -280,13 +300,13 @@ function ProjectModal({ project, onClose }) {
           gap: '12px',
         }}>
           <div style={{
-            width: '80px', height: '80px', borderRadius: '24px',
+            width: 'clamp(60px, 12vw, 80px)', height: 'clamp(60px, 12vw, 80px)', borderRadius: '24px',
             background: `linear-gradient(135deg, ${project.color}25, ${project.color}10)`,
             border: `1px solid ${project.color}30`,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: '36px',
+            fontSize: 'clamp(24px, 8vw, 36px)',
           }}>
-            {project.title.includes('Housing') ? '🏠' : '🎓'}
+            {project.title.includes('Housing') ? '🏠' : project.title.includes('College') ? '🎓' : project.title.includes('E-Commerce') ? '🛒' : project.title.includes('Task') ? '✅' : project.title.includes('Social') ? '👥' : project.title.includes('Fitness') ? '💪' : project.title.includes('Real Estate') ? '🏘️' : '📚'}
           </div>
         </div>
 
@@ -296,56 +316,58 @@ function ProjectModal({ project, onClose }) {
           borderRadius: '8px',
           background: `${project.color}10`,
           border: `1px solid ${project.color}20`,
-          fontSize: '12px',
+          fontSize: 'clamp(11px, 2vw, 12px)',
           fontWeight: 600,
           color: project.color,
-          marginBottom: '12px',
+          marginBottom: 'clamp(8px, 2vw, 12px)',
         }}>
           {project.category}
         </span>
 
         <h2 style={{
-          fontSize: 'clamp(1.4rem, 3vw, 1.8rem)',
+          fontSize: 'clamp(1.3rem, 4vw, 1.8rem)',
           fontWeight: 700,
           color: '#0F172A',
-          marginBottom: '16px',
+          marginBottom: 'clamp(12px, 2vw, 16px)',
           fontFamily: "'Space Grotesk', sans-serif",
+          lineHeight: 1.3,
         }}>
           {project.title}
         </h2>
 
         <p style={{
-          fontSize: '15px',
+          fontSize: 'clamp(13px, 2.5vw, 15px)',
           lineHeight: 1.8,
           color: '#475569',
-          marginBottom: '24px',
+          marginBottom: 'clamp(16px, 3vw, 24px)',
         }}>
           {project.description}
         </p>
 
         <h4 style={{
-          fontSize: '13px',
+          fontSize: 'clamp(11px, 2vw, 13px)',
           fontWeight: 600,
           color: '#94A3B8',
-          letterSpacing: '1px',
+          letterSpacing: '0.5px',
           textTransform: 'uppercase',
-          marginBottom: '12px',
+          marginBottom: 'clamp(8px, 2vw, 12px)',
         }}>
           Technologies Used
         </h4>
 
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'clamp(6px, 2vw, 8px)' }}>
           {project.technologies.map((tech) => (
             <span
               key={tech}
               style={{
-                padding: '6px 14px',
+                padding: 'clamp(4px, 1vw, 6px) clamp(10px, 2vw, 14px)',
                 borderRadius: '10px',
-                fontSize: '13px',
+                fontSize: 'clamp(11px, 2vw, 13px)',
                 fontWeight: 500,
                 color: '#475569',
                 background: 'rgba(255,255,255,0.7)',
                 border: '1px solid rgba(255,255,255,0.4)',
+                whiteSpace: 'nowrap',
               }}
             >
               {tech}

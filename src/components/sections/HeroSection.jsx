@@ -239,7 +239,7 @@ export default function HeroSection() {
             marginTop: '48px',
           }}
         >
-          {['React.js', 'Spring Boot', 'Java', '.NET', 'MySQL'].map((skill, i) => (
+          {['React.js', 'Spring Boot', 'Java', '.NET MVC', 'MySQL', 'Machine Learning', 'Azure'].map((skill, i) => (
             <motion.span
               key={skill}
               whileHover={{ scale: 1.08, y: -2 }}

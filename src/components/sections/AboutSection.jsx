@@ -20,8 +20,8 @@ export default function AboutSection() {
   ]
 
   const stats = [
-    { value: '5+', label: 'Technologies' },
-    { value: '3+', label: 'Projects' },
+    { value: '9+', label: 'Technologies' },
+    { value: '5+', label: 'Projects' },
     { value: '100%', label: 'Dedication' },
   ]
 

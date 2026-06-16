@@ -6,37 +6,49 @@ const skillCategories = [
     title: 'Languages',
     icon: '⚡',
     color: '#60A5FA',
-    skills: ['Java', 'JavaScript', 'C'],
+    skills: ['Java', 'JavaScript', 'C', 'Python'],
   },
   {
     title: 'Frontend',
     icon: '🎨',
     color: '#6EE7F9',
-    skills: ['HTML', 'CSS', 'Bootstrap', 'React.js'],
+    skills: ['React.js', 'HTML', 'CSS', 'Bootstrap', 'Tailwind CSS', 'Framer Motion', 'Figma'],
   },
   {
     title: 'Backend',
     icon: '⚙️',
     color: '#A78BFA',
-    skills: ['.NET MVC 5', 'Spring Boot'],
+    skills: ['.NET MVC 5', 'Spring Boot', 'Node.js', 'REST APIs'],
   },
   {
     title: 'Database',
     icon: '🗄️',
     color: '#60A5FA',
-    skills: ['MySQL', 'SQL Server'],
+    skills: ['MySQL', 'SQL Server','Firebase'],
   },
   {
-    title: 'Tools',
+    title: 'Tools & DevOps',
     icon: '🔧',
     color: '#6EE7F9',
-    skills: ['Git', 'Postman'],
+    skills: ['Git', 'GitHub', 'Postman', 'Docker', 'Vite', 'npm', 'VS Code'],
   },
   {
-    title: 'Concepts',
+    title: 'Concepts & Patterns',
     icon: '🧠',
     color: '#A78BFA',
-    skills: ['REST APIs', 'MVC', 'OOP'],
+    skills: ['REST APIs', 'MVC Architecture', 'OOP', 'JWT Authentication', 'WebSockets', 'CRUD Operations'],
+  },
+  {
+    title: 'API & Services',
+    icon: '🌐',
+    color: '#FBBF24',
+    skills: ['Stripe API', 'Google Maps API', 'Firebase Auth', 'Socket.io', 'EmailJS', 'JWT'],
+  },
+  {
+    title: 'Additional Skills',
+    icon: '⭐',
+    color: '#F87171',
+    skills: ['Responsive Design', 'Performance Optimization', 'Database Design', 'Version Control', 'Agile', 'Problem Solving'],
   },
 ]
 
@@ -167,12 +179,12 @@ function NeuralNetwork({ isInView }) {
     // Input layer
     { x: 80, y: 60, label: 'Java', color: '#60A5FA' },
     { x: 80, y: 130, label: 'React', color: '#6EE7F9' },
-    { x: 80, y: 200, label: 'SQL', color: '#A78BFA' },
-    { x: 80, y: 270, label: 'C', color: '#60A5FA' },
+    { x: 80, y: 200, label: 'Node.js', color: '#A78BFA' },
+    { x: 80, y: 270, label: 'Python', color: '#60A5FA' },
     // Hidden layer
     { x: 250, y: 95, label: 'Frontend', color: '#6EE7F9' },
     { x: 250, y: 165, label: 'Backend', color: '#A78BFA' },
-    { x: 250, y: 235, label: 'DevOps', color: '#60A5FA' },
+    { x: 250, y: 235, label: 'Databases', color: '#60A5FA' },
     // Output
     { x: 420, y: 150, label: 'Full Stack', color: '#A78BFA' },
   ]
