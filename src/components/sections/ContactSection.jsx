@@ -2,8 +2,15 @@ import React, { useRef, useState } from 'react'
 import { motion, useInView, AnimatePresence } from 'framer-motion'
 import emailjs from '@emailjs/browser'
 
-// Initialize EmailJS with environment variables
-emailjs.init(import.meta.env.VITE_EMAILJS_PUBLIC_KEY)
+const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID
+const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID
+const autoReplyTemplateId = import.meta.env.VITE_EMAILJS_AUTO_REPLY_TEMPLATE_ID
+
+// Initialize EmailJS with environment variables when available
+if (publicKey) {
+  emailjs.init(publicKey)
+}
 
 // 3D Loading Animation Component
 const EmailLoadingOverlay = () => (
@@ -167,30 +174,26 @@ export default function ContactSection() {
     setIsSubmitting(true)
 
     try {
-      const templateParams = {
-        from_name: formState.name,      // use {{from_name}} in EmailJS template
-        from_email: formState.email,    // use {{from_email}} in EmailJS template
-        message: formState.message,     // use {{message}} in EmailJS template
-        reply_to: formState.email,      // lets you hit Reply directly to the sender
+      if (!publicKey || !serviceId || !templateId) {
+        throw new Error('EmailJS is not configured. Please set VITE_EMAILJS_PUBLIC_KEY, VITE_EMAILJS_SERVICE_ID, and VITE_EMAILJS_TEMPLATE_ID in the environment file.')
       }
 
-      // Send main email to Sakyath
-      await emailjs.send(
-        import.meta.env.VITE_EMAILJS_SERVICE_ID,
-        'template_qu51wgd',
-        templateParams
-      )
-
-      // Send auto-reply to sender
-      const autoReplyParams = {
+      const templateParams = {
         from_name: formState.name,
         from_email: formState.email,
+        message: formState.message,
+        reply_to: formState.email,
       }
-      await emailjs.send(
-        import.meta.env.VITE_EMAILJS_SERVICE_ID,
-        'template_1uousdd',
-        autoReplyParams
-      )
+
+      await emailjs.send(serviceId, templateId, templateParams, publicKey)
+
+      if (autoReplyTemplateId) {
+        const autoReplyParams = {
+          from_name: formState.name,
+          from_email: formState.email,
+        }
+        await emailjs.send(serviceId, autoReplyTemplateId, autoReplyParams, publicKey)
+      }
 
       setSubmitMessage("✓ Message sent successfully! I'll get back to you soon.")
       setFormState({ name: '', email: '', message: '' })
